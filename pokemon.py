@@ -39,7 +39,7 @@ class Pokemon:
         self.currentHealth = self._get_health()
 
     def print_stats(self):
-        print(color.BOLD + f"{self.name:<16}  " + color.END + f"HP: {self.currentHealth:<3}  Schaden: {self._get_damage():<3}   XP: {self.xp:<4}   XP bis nächstes Level: {self._get_damage():<4}  " + color.YELLOW + color.BOLD + f"Level: {self.level:<3}" + color.END)
+        print(color.BOLD + f"{self.name:<16}  " + color.END + f"HP: {round(self.currentHealth, 1):<3}  Schaden: {round(self._get_damage(), 1):<3}   XP: {round(self.xp, 1):<4}   XP bis nächstes Level: {round(self._get_damage(), 1):<4}  " + color.YELLOW + color.BOLD + f"Level: {self.level:<3}" + color.END)
 
     def __eq__(self, other):
         return self.name == other.name
@@ -70,41 +70,43 @@ class Pokemon:
         # Wasser vs Feuer -> Wasser gewinnt
         if self.type == PokemonType.WATER and other.type == PokemonType.FIRE:
             damage = damage * 1.5
-            critic = True
 
         # Feuer vs Pflanze -> Feuer gewinnt
         if self.type == PokemonType.FIRE and other.type == PokemonType.PLANT:
             damage = damage * 1.5
-            critic = True
 
         # Pflanze vs Wasser -> Pflanze gewinnt
         if self.type == PokemonType.PLANT and other.type == PokemonType.WATER:
             damage = damage * 1.5
-            critic = True
         
         # Rock vs Fire -> Rock gewinnt gegen Fire
         if self.type == PokemonType.ROCK and other.type == PokemonType.FIRE:
             damage = damage * 1.5
-            critic = True
 
         # Rock vs Electric -> Rock verliert gegen Electric
         if self.type == PokemonType.ROCK and other.type == PokemonType.ELECTRIC:
             damage = damage * 0.5
-            critic = True
 
         # Electric vs Water -> Electric gewinnt gegen Water
         if self.type == PokemonType.ELECTRIC and other.type == PokemonType.WATER:
             damage = damage * 1.5
-            critic = True
 
         # Electric vs Rock -> Electric verliert gegen Rock
         if self.type == PokemonType.ELECTRIC and other.type == PokemonType.ROCK:
             damage = damage * 0.5
-            critic = True
+
 
         # Zufallsmultiplikator
-        randomMultiplier = random.randrange(8, 14) / 10.0
+        randomMultiplier = random.randrange(8, 13) / 10.0
         damage = damage * randomMultiplier
+
+        # kritische Treffer
+
+        critical_hit = random.choice([0, 1, 2, 3])
+        if critical_hit == 0:
+            critic = True
+            damage = damage * 1.5
+
         damage = damage * multiplier
 
         other.currentHealth -= damage
